@@ -54,7 +54,7 @@
         android:label="ZiggyBites Delivery"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
+        android:usesCleartextTraffic="false"
 
         android:hardwareAccelerated="true">
         
