@@ -32,8 +32,9 @@ class AppConfig {
   static const Color exitDialogBackgroundDark = Color(0xFF1E1E1E); // Dark Gray
   static const Color exitDialogTitleColorDark = Color(0xFFFFFFFF); // White
   static const Color exitDialogTextColorDark = Color(0xFFB3B3B3); // Light Gray
-  static const Color exitDialogCancelColorDark =
-      Color(0xFFB3B3B3); // Light Gray
+  static const Color exitDialogCancelColorDark = Color(
+    0xFFB3B3B3,
+  ); // Light Gray
 
   // Exit Dialog - Common
   static const Color exitDialogButtonColor = primaryColor; // Exit button color
@@ -49,7 +50,8 @@ class AppConfig {
 
   // Dark Theme Status Bar
   static const Color statusBarColorDark = Color(0x00000000); // Transparent
-  static const Brightness statusBarIconBrightnessDark = Brightness.light; // Light icons
+  static const Brightness statusBarIconBrightnessDark =
+      Brightness.light; // Light icons
   static const Color navigationBarColorDark = Color(0xFF121212); // Dark Gray
   static const Brightness navigationBarIconBrightnessDark = Brightness.light;
 
@@ -69,13 +71,12 @@ class AppConfig {
     return 'user';
   }
 
-
-
   /// Drawable name (res/drawable) — must be white silhouette, not mipmap launcher.
   static const String notificationIcon = '@mipmap/ic_launcher';
 
   // Notification color (used for Android notification LED and accent color)
-  static const Color notificationColor = primaryColor; // Uses primary color by default
+  static const Color notificationColor =
+      primaryColor; // Uses primary color by default
 
   // Notification channel ID (Android)
   static const String notificationChannelId = 'webview_notifications';
@@ -84,7 +85,8 @@ class AppConfig {
   static const String notificationChannelName = 'WebView Notifications';
 
   // Notification channel description (Android)
-  static const String notificationChannelDescription = 'Notifications from the website and push notifications';
+  static const String notificationChannelDescription =
+      'Notifications from the website and push notifications';
 
   // Critical Notification channel ID (Android)
   static const String criticalChannelId = 'critical_order_alerts_v6';
@@ -93,7 +95,8 @@ class AppConfig {
   static const String criticalChannelName = 'New Order Alerts';
 
   // Critical Notification channel description (Android)
-  static const String criticalChannelDescription = 'Urgent notifications for new restaurant orders';
+  static const String criticalChannelDescription =
+      'Urgent notifications for new restaurant orders';
 
   // Custom notification sound filename (without extension for Android)
   static const String notificationSoundName = 'order_ringtone';
@@ -115,20 +118,17 @@ class AppConfig {
   static const List<OnboardingPage> onboardingPages = [
     OnboardingPage(
       title: 'Welcome to WebView Master',
-      description:
-          'Experience seamless web browsing with our advanced WebView application.',
+      description: 'Experience seamless web browsing with our advanced WebView application.',
       imagePath: 'assets/onboarding/onboarding1.png',
     ),
     OnboardingPage(
       title: 'Feature Rich',
-      description:
-          'Enjoy camera, location, microphone access and many more powerful features.',
+      description: 'Enjoy camera, location, microphone access and many more powerful features.',
       imagePath: 'assets/onboarding/onboarding2.png',
     ),
     OnboardingPage(
       title: 'Fast & Secure',
-      description:
-          'Lightning-fast performance with top-notch security for your browsing needs.',
+      description: 'Lightning-fast performance with top-notch security for your browsing needs.',
       imagePath: 'assets/onboarding/onboarding3.png',
     ),
   ];
@@ -141,7 +141,6 @@ class AppConfig {
     'Photos',
     'Notifications',
   ];
-
 
   // ==================== UI SETTINGS ====================
   static const double borderRadius = 16.0;

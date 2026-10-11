@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
@@ -56,15 +57,15 @@ void onStart(ServiceInstance service) async {
               usageType: AndroidUsageType.notification,
               audioFocus: AndroidAudioFocus.gainTransient,
             ),
-            iOS: AudioContextIOS(
-              category: AVAudioSessionCategory.ambient,
-            ),
+            iOS: AudioContextIOS(category: AVAudioSessionCategory.ambient),
           ),
         );
         await audioPlayer!.setReleaseMode(ReleaseMode.loop);
         // setSource prepares the player (AudioAttributes already in place),
         // then resume starts output — volume is correct from the very first frame.
-        await audioPlayer!.setSource(AssetSource('audio/iphone-remix-68028.mp3'));
+        await audioPlayer!.setSource(
+          AssetSource('audio/iphone-remix-68028.mp3'),
+        );
         await audioPlayer!.resume();
       }
     });
@@ -102,10 +103,13 @@ void onStart(ServiceInstance service) async {
 
       try {
         final position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        
-        debugPrint('📍 Background Location: ${position.latitude}, ${position.longitude}');
-        
+          desiredAccuracy: LocationAccuracy.high,
+        );
+
+        debugPrint(
+          '📍 Background Location: ${position.latitude}, ${position.longitude}',
+        );
+
         // Broadcast location update
         service.invoke('update', {
           "latitude": position.latitude,

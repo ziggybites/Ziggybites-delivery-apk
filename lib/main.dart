@@ -26,7 +26,9 @@ void main() async {
     // Foreground notifications are handled by NotificationService.onMessage listener
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     debugPrint('✅ Background message handler registered');
-    debugPrint('📱 Notification setup: Both foreground and background notifications enabled');
+    debugPrint(
+      '📱 Notification setup: Both foreground and background notifications enabled',
+    );
   } catch (e) {
     debugPrint('❌ Error initializing Firebase: $e');
     debugPrint('⚠️ Make sure google-services.json is added to android/app/');
@@ -42,11 +44,11 @@ void main() async {
     final notificationService = NotificationService();
     await notificationService.initialize();
     debugPrint('✅ Notification service initialized in main');
-    
+
     // Request notification permission immediately on app startup
     await notificationService.requestPermission();
     debugPrint('📱 Notification permission requested on startup');
-    
+
     debugPrint('📱 Foreground notifications: Enabled via NotificationService');
   } catch (e) {
     debugPrint('❌ Error initializing notification service in main: $e');
@@ -55,13 +57,17 @@ void main() async {
   // Initialize Background Service
   try {
     await BackgroundServiceUtil.initializeService();
-    
+
     // Only start if user has it enabled in preferences
     if (PrefsUtil.isOverlayEnabled()) {
       await BackgroundServiceUtil.start();
-      debugPrint('✅ Background service initialized and started (persisted state: ON)');
+      debugPrint(
+        '✅ Background service initialized and started (persisted state: ON)',
+      );
     } else {
-      debugPrint('ℹ️ Background service initialized but NOT started (persisted state: OFF)');
+      debugPrint(
+        'ℹ️ Background service initialized but NOT started (persisted state: OFF)',
+      );
     }
   } catch (e) {
     debugPrint('❌ Error initializing background service: $e');
@@ -109,7 +115,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      debugPrint('📱 App resumed: Stopping order ringtone (keeping tray notifications)');
+      debugPrint(
+        '📱 App resumed: Stopping order ringtone (keeping tray notifications)',
+      );
       NotificationService().stopOrderAlertSound();
     }
   }

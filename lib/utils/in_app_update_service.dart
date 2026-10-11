@@ -66,11 +66,13 @@ class InAppUpdateService {
     try {
       debugPrint('🔄 [Update] Checking for app update...');
       final AppUpdateInfo info = await InAppUpdate.checkForUpdate();
-      debugPrint('🔄 [Update] availability=${info.updateAvailability}, '
-          'priority=${info.updatePriority}, '
-          'installStatus=${info.installStatus}, '
-          'immediate=${info.immediateUpdateAllowed}, '
-          'flexible=${info.flexibleUpdateAllowed}');
+      debugPrint(
+        '🔄 [Update] availability=${info.updateAvailability}, '
+        'priority=${info.updatePriority}, '
+        'installStatus=${info.installStatus}, '
+        'immediate=${info.immediateUpdateAllowed}, '
+        'flexible=${info.flexibleUpdateAllowed}',
+      );
 
       // A flexible download that completed while the app was backgrounded
       // will surface as InstallStatus.downloaded on the next checkForUpdate().
@@ -140,28 +142,32 @@ class InAppUpdateService {
     debugPrint('🔄 [Update] Starting flexible update download...');
 
     // installUpdateListener is Stream<InstallStatus> — no wrapper object.
-    _installStateSubscription =
-        InAppUpdate.installUpdateListener.listen((InstallStatus status) {
-      debugPrint('🔄 [Update] Install status: $status');
-      if (status == InstallStatus.downloaded && context.mounted) {
-        _showRestartBanner(context);
-      }
-    }, onError: (Object e) {
-      debugPrint('⚠️ [Update] Install listener error: $e');
-    });
+    _installStateSubscription = InAppUpdate.installUpdateListener.listen(
+      (InstallStatus status) {
+        debugPrint('🔄 [Update] Install status: $status');
+        if (status == InstallStatus.downloaded && context.mounted) {
+          _showRestartBanner(context);
+        }
+      },
+      onError: (Object e) {
+        debugPrint('⚠️ [Update] Install listener error: $e');
+      },
+    );
 
-    InAppUpdate.startFlexibleUpdate().then((AppUpdateResult result) {
-      debugPrint('🔄 [Update] Flexible update started: $result');
-      if (result == AppUpdateResult.userDeniedUpdate) {
-        _installStateSubscription?.cancel();
-        _installStateSubscription = null;
-        debugPrint('🔄 [Update] User declined flexible update.');
-      }
-    }).catchError((Object e) {
-      debugPrint('⚠️ [Update] startFlexibleUpdate failed: $e');
-      _installStateSubscription?.cancel();
-      _installStateSubscription = null;
-    });
+    InAppUpdate.startFlexibleUpdate()
+        .then((AppUpdateResult result) {
+          debugPrint('🔄 [Update] Flexible update started: $result');
+          if (result == AppUpdateResult.userDeniedUpdate) {
+            _installStateSubscription?.cancel();
+            _installStateSubscription = null;
+            debugPrint('🔄 [Update] User declined flexible update.');
+          }
+        })
+        .catchError((Object e) {
+          debugPrint('⚠️ [Update] startFlexibleUpdate failed: $e');
+          _installStateSubscription?.cancel();
+          _installStateSubscription = null;
+        });
   }
 
   /// Shows a persistent [MaterialBanner] at the top of the screen.
@@ -187,10 +193,7 @@ class InAppUpdateService {
           TextButton(
             onPressed: () =>
                 ScaffoldMessenger.of(context).clearMaterialBanners(),
-            child: const Text(
-              'LATER',
-              style: TextStyle(color: Colors.white70),
-            ),
+            child: const Text('LATER', style: TextStyle(color: Colors.white70)),
           ),
           TextButton(
             onPressed: () {

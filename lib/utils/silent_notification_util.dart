@@ -53,8 +53,10 @@ class SilentNotificationUtil {
     required String body,
     String? payload,
   }) async {
-    final android = plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final android = plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     await ensureSilentChannel(android);
 
     await plugin.show(id, title, body, details, payload: payload);
@@ -72,12 +74,6 @@ class SilentNotificationUtil {
     if (title.isEmpty && body.isEmpty) return;
 
     final id = (message.messageId ?? '$title$body').hashCode.abs() % 2147483647;
-    await show(
-      plugin,
-      id: id,
-      title: title,
-      body: body,
-      payload: payload,
-    );
+    await show(plugin, id: id, title: title, body: body, payload: payload);
   }
 }

@@ -15,7 +15,8 @@ class NewOrderNotificationUtil {
   // and static flags are NOT shared across Dart isolates (FCM background isolate).
 
   static int notificationIdFor(Map<String, dynamic> data) {
-    final orderKey = data['orderId'] ??
+    final orderKey =
+        data['orderId'] ??
         data['order_id'] ??
         data['orderMongoId'] ??
         data['id'] ??
@@ -31,7 +32,8 @@ class NewOrderNotificationUtil {
   }
 
   static String bodyFrom(RemoteMessage message, Map<String, dynamic> data) {
-    final body = message.notification?.body ??
+    final body =
+        message.notification?.body ??
         data['body']?.toString() ??
         data['message']?.toString() ??
         '';
@@ -61,7 +63,9 @@ class NewOrderNotificationUtil {
         ledColor: Colors.red,
       ),
     );
-    debugPrint('✅ Critical notification channel ensured: ${AppConfig.criticalChannelId}');
+    debugPrint(
+      '✅ Critical notification channel ensured: ${AppConfig.criticalChannelId}',
+    );
   }
 
   static NotificationDetails buildDetails() {
@@ -112,7 +116,8 @@ class NewOrderNotificationUtil {
       try {
         if (!await Permission.notification.isGranted) {
           debugPrint(
-              '❌ POST_NOTIFICATIONS not granted — cannot show tray notification');
+            '❌ POST_NOTIFICATIONS not granted — cannot show tray notification',
+          );
           return false;
         }
       } catch (e) {
@@ -121,17 +126,13 @@ class NewOrderNotificationUtil {
     }
 
     try {
-      final android = plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final android = plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       await ensureCriticalChannel(android);
 
-      await plugin.show(
-        id,
-        title,
-        body,
-        buildDetails(),
-        payload: payload,
-      );
+      await plugin.show(id, title, body, buildDetails(), payload: payload);
       debugPrint('✅ Tray notification posted (id=$id): $title | $body');
       return true;
     } catch (e, stack) {

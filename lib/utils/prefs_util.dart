@@ -8,7 +8,6 @@ class PrefsUtil {
   static const String _keyPhoneNumber = 'phone_number';
   static const String _keyOverlayEnabled = 'overlay_enabled';
 
-
   static SharedPreferences? _prefs;
 
   /// Initialize SharedPreferences
@@ -20,7 +19,8 @@ class PrefsUtil {
   static SharedPreferences get instance {
     if (_prefs == null) {
       throw Exception(
-          'PrefsUtil not initialized. Call PrefsUtil.init() first.');
+        'PrefsUtil not initialized. Call PrefsUtil.init() first.',
+      );
     }
     return _prefs!;
   }
@@ -84,7 +84,7 @@ class PrefsUtil {
   }
 
   // ==================== AUTH TOKEN ====================
-  
+
   static const String _keyAccessToken = 'access_token';
 
   /// Save API access token

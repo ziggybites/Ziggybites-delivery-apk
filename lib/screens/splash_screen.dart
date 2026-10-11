@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'dart:math' as math;
+
 import 'package:webview_master_app/config/app_config.dart';
 import 'package:webview_master_app/utils/prefs_util.dart';
 import 'package:webview_master_app/utils/status_bar_util.dart';
@@ -63,10 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.03).animate(
-      CurvedAnimation(
-        parent: _pulseController,
-        curve: Curves.easeInOutSine,
-      ),
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOutSine),
     );
 
     // Background Animation (Floating)
@@ -143,11 +142,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: Stack(
         children: [
           // 1. Deep Navy Gradient Background
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-          ),
+          Container(decoration: const BoxDecoration(color: Colors.white)),
           // 2. Animated Floating Soft Glows
           AnimatedBuilder(
             animation: _backgroundController,
@@ -205,8 +200,10 @@ class _SplashScreenState extends State<SplashScreen>
           // 3. Central Content (Logo + Text)
           Center(
             child: AnimatedBuilder(
-              animation:
-                  Listenable.merge([_entranceController, _pulseController]),
+              animation: Listenable.merge([
+                _entranceController,
+                _pulseController,
+              ]),
               builder: (context, child) {
                 return Opacity(
                   opacity: _fadeAnimation.value,

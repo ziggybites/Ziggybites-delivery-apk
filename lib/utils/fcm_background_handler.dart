@@ -22,7 +22,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   try {
     debugPrint('📨 [BG] Background message received');
     debugPrint('🔍 [BG] RAW FCM PAYLOAD MAP: ${message.toMap()}');
-    
+
     Map<String, dynamic> data = Map<String, dynamic>.from(message.data);
     RemoteNotification? notification = message.notification;
 
@@ -42,7 +42,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     final body = NewOrderNotificationUtil.bodyFrom(message, data);
 
     if (isNewOrder) {
-      debugPrint('🔔 [BG] New order confirmed — showing system tray notification and sounding alarm.');
+      debugPrint(
+        '🔔 [BG] New order confirmed — showing system tray notification and sounding alarm.',
+      );
 
       final serviceInstance = NotificationService();
       await serviceInstance.initialize(isBackground: true);
@@ -51,13 +53,16 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       // auto-displays it on the default (silent) channel BEFORE this handler runs.
       // Cancel that auto-notification so only the critical-channel version appears.
       if (message.notification != null) {
-        debugPrint('ℹ️ [BG] FCM notification payload present — cancelling auto-shown notification before showing critical alert.');
+        debugPrint(
+          'ℹ️ [BG] FCM notification payload present — cancelling auto-shown notification before showing critical alert.',
+        );
         // Wait a short delay to ensure the Android OS has fully rendered the auto-displayed notification before we cancel it
         await Future.delayed(const Duration(milliseconds: 600));
         await serviceInstance.cancelAllNotifications();
       }
 
-      String notificationId = message.messageId ?? DateTime.now().millisecondsSinceEpoch.toString();
+      String notificationId =
+          message.messageId ?? DateTime.now().millisecondsSinceEpoch.toString();
 
       await serviceInstance.showOrderNotification(
         title: title.isNotEmpty ? title : 'New Order',
@@ -68,12 +73,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
       try {
         final service = FlutterBackgroundService();
-        final orderPayload = {
-          'title': title,
-          'body': body,
-          'data': data,
-        };
-        
+        final orderPayload = {'title': title, 'body': body, 'data': data};
+
         if (await service.isRunning()) {
           service.invoke('startRingtone', orderPayload);
         } else {
@@ -82,17 +83,21 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           service.invoke('startRingtone', orderPayload);
         }
       } catch (e) {
-        debugPrint('❌ [BG] Error invoking background service ringtone logic: $e');
+        debugPrint(
+          '❌ [BG] Error invoking background service ringtone logic: $e',
+        );
       }
       return;
     }
 
-    debugPrint('🔕 [BG] Status/other notification captured — forcing silent tray insertion.');
-    
+    debugPrint(
+      '🔕 [BG] Status/other notification captured — forcing silent tray insertion.',
+    );
+
     // FCM automatically displays background notifications if the payload contains a "notification" object.
     if (message.notification != null) {
       final autoTitle = (message.notification!.title ?? '').trim();
-      final autoBody  = (message.notification!.body  ?? '').trim();
+      final autoBody = (message.notification!.body ?? '').trim();
 
       if (autoTitle.isEmpty && autoBody.isEmpty) {
         // The FCM payload carried an empty notification object. Android OS
@@ -102,34 +107,40 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         // Wait a short delay to ensure the Android OS has fully rendered the auto-displayed notification before we cancel it
         await Future.delayed(const Duration(milliseconds: 600));
         await svc.cancelAllNotifications();
-        debugPrint('ℹ️ [BG] Cancelled blank auto-FCM notification (empty title+body).');
+        debugPrint(
+          'ℹ️ [BG] Cancelled blank auto-FCM notification (empty title+body).',
+        );
       } else {
-        debugPrint('ℹ️ [BG] Non-blank FCM notification payload — Android OS already displayed it silently. Skipping duplicate manual show.');
+        debugPrint(
+          'ℹ️ [BG] Non-blank FCM notification payload — Android OS already displayed it silently. Skipping duplicate manual show.',
+        );
       }
       return;
     }
 
     final silentTitle = NotificationPayloadUtil.titleFrom(message, data);
     final silentBody = NotificationPayloadUtil.bodyFrom(message, data);
-    
+
     // Skip truly empty payloads. titleFrom() now returns '' (not 'Notification')
     // when there is no real content, so this guard now works correctly.
     if (silentTitle.isEmpty && silentBody.isEmpty) {
-      debugPrint('ℹ️ [BG] Empty non-order payload, skipping system notification stack.');
+      debugPrint(
+        'ℹ️ [BG] Empty non-order payload, skipping system notification stack.',
+      );
       return;
     }
 
     final serviceInstance = NotificationService();
     await serviceInstance.initialize(isBackground: true);
 
-    String notificationId = message.messageId ?? DateTime.now().millisecondsSinceEpoch.toString();
+    String notificationId =
+        message.messageId ?? DateTime.now().millisecondsSinceEpoch.toString();
 
     await serviceInstance.showSimpleNotification(
       title: silentTitle.isNotEmpty ? silentTitle : silentBody,
       body: silentTitle.isNotEmpty ? silentBody : '',
       notificationId: notificationId,
     );
-
   } catch (e, stack) {
     debugPrint('❌ [BG] FATAL ERROR: $e');
     debugPrint('❌ [BG] STACK: $stack');
